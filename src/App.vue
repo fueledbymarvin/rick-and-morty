@@ -1,42 +1,38 @@
 <template>
-  <div v-if="result">
-    <div v-for="c in result.characters.results" :key="c.name">
-      {{ c.name }}
-    </div>
+  <div class="page-content">
+    <Search />
   </div>
 </template>
 
 <script setup>
-import { useQuery } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-
-const { result } = useQuery(gql`
-  query {
-    characters(page: 2, filter: { name: "rick" }) {
-      info {
-        count
-      }
-      results {
-        name
-      }
-    }
-    location(id: 1) {
-      id
-    }
-    episodesByIds(ids: [1, 2]) {
-      id
-    }
-  }
-`)
+// show page number, total results
+// consistent border-radius and spacing
+// use common fonts
+// show ellipsis? or should we just see what they do
+// 15 min setup
+// 30 min unstyled search
+// 30 min style search
+import Search from './components/Search.vue'
 </script>
 
-<style>
+<style lang="scss">
+@import './reset.css';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  font-size: 16px;
+  color: #000;
+  display: flex;
+  justify-content: center;
+}
+</style>
+
+<style lang="scss" scoped>
+.page-content {
+  padding: 16px;
+  flex: 0 1 400px;
+  max-width: 100%;
 }
 </style>
