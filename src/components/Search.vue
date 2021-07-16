@@ -1,52 +1,55 @@
 <template>
-  <div class="title">Character Explorer</div>
   <input
     v-model="query"
     class="search"
     type="text"
     placeholder="Search" />
-  <div v-if="query" class="results">
-    <div v-if="loading">
+  <div class="results">
+    <template v-if="loading">
       Loading...
-    </div>
-    <div v-else-if="result">
+    </template>
+    <template v-else-if="result">
       <div
-        v-for="c in result.characters.results"
-        :key="c.id"
+        v-for="character in result.characters.results"
+        :key="character.id"
         class="result">
-        <img :src="c.image" class="result-image" />
-        <div class="result-info">
-          <div class="result-name truncate">{{ c.name }}</div>
-          <div class="result-location truncate">{{ c.location.name }}</div>
-        </div>
+        <CharacterCard
+          :character="character"
+          @click="emit('character', character.id)" />
       </div>
       <div class="buttons">
         <div>
-          <button
+          <Button
             v-if="result.characters.info.prev"
             @click="page--">
             Previous
-          </button>
+          </Button>
         </div>
         <div>
-          <button
+          <Button
             v-if="result.characters.info.next"
             @click="page++">
             Next
-          </button>
+          </Button>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits, watch } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
+import CharacterCard from './CharacterCard.vue'
+import Button from './Button.vue'
+
+const emit = defineEmits(['character'])
 
 const query = ref('')
 const page = ref(1)
+
+watch(page, () => window.scrollTo(0, 0))
 
 const { result, loading } = useQuery(
   gql`
@@ -76,13 +79,7 @@ const { result, loading } = useQuery(
 </script>
 
 <style lang="scss" scoped>
-.title {
-  font-weight: bold;
-  font-size: 24px;
-}
-
 .search {
-  margin-top: 16px;
   border: 1px solid #D7DFE9;
   border-radius: 8px;
   padding: 12px 16px;
@@ -98,65 +95,16 @@ const { result, loading } = useQuery(
 }
 
 .result {
-  display: flex;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow:
-    0px 2px 4px rgba(58, 92, 144, 0.14),
-    0px 3px 4px rgba(58, 92, 144, 0.12),
-    0px 1px 5px rgba(58, 92, 144, 0.2);
+  cursor: pointer;
 
   & + & {
     margin-top: 16px;
   }
 }
 
-.result-image {
-  flex-shrink: 0;
-  width: 96px;
-  height: 96px;
-}
-
-.result-info {
-  min-width: 0;
-  padding: 16px;
-}
-
-.result-name {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.result-location {
-  color: #878D96;
-  margin-top: 8px;
-}
-
-.truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .buttons {
   margin-top: 24px;
   display: flex;
   justify-content: space-between;
-
-  button {
-    background: #FFF;
-    border: 1px solid #343A3F;
-    box-shadow:
-      0px 2px 4px rgba(58, 92, 144, 0.14),
-      0px 3px 4px rgba(58, 92, 144, 0.12),
-      0px 1px 5px rgba(58, 92, 144, 0.2);
-    border-radius: 8px;
-    padding: 8px 16px;
-    text-transform: uppercase;
-    color: #343A3F;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 1;
-  }
 }
 </style>
