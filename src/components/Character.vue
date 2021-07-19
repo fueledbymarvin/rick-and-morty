@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed, toRefs, watch } from 'vue'
+import { computed, toRefs, watch } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import CharacterCard from './CharacterCard.vue'

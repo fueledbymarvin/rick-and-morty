@@ -9,7 +9,7 @@
 </template>
 
 <script setup="props">
-import { defineProps, toRefs } from 'vue'
+import { toRefs } from 'vue'
 
 const props = defineProps({
   character: Object,
